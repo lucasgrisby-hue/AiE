@@ -1,7 +1,9 @@
-import os
+# -*- coding: utf-8 -*-
 
-from google import genai
 from dotenv import load_dotenv
+
+from model import generate_gemini_response, generate_ollama_response
+from utils import process_response
 
 from warnings import filterwarnings
 
@@ -9,13 +11,10 @@ filterwarnings("ignore")
 
 load_dotenv()
 
-client = genai.Client(api_key=os.environ["GEMINI_API_KEY"])
+stream=False
 
-message = input("User: ")
+user_input = "Who is Ozymandias?"
+# user_input = "What is the last question I asked?"
+ai_response, stream = generate_ollama_response(user_input=user_input, stream=stream)
 
-response = client.models.generate_content(
-    model=os.environ["GEMINI_MODEL_NAME"],
-    contents=message
-)
-
-print(f"AI: {response.text}")
+process_response(response=ai_response, stream=stream)
